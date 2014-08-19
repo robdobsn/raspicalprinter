@@ -1,4 +1,4 @@
 raspicalprinter
 ===============
 
-Raspberry Pi Calendar Printer
+Raspberry Pi Calendar Printer Thing
