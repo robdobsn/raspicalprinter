@@ -6,7 +6,7 @@ class Calendars:
 	
 	def printCal(self, printer, person):
 		try:
-			r = requests.get ('http://macallan:5000/calendars/api/v1.0/cal')
+			r = requests.get ('http://macallan:5077/calendar/min/7')
 			calendarevents = r.json()
 		except:
 			printer.println ("Cannot connect to calendar")
