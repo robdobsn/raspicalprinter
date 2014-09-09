@@ -94,6 +94,7 @@ while(not exitProgram):
                 elif i == 3:
                     printer.print('My IP address is ' + s.getsockname()[0])
                     printer.feed(3)
+                    subprocess.call(["python", "sudoku-gfx.py"])
 
         # Check for a button held down for x seconds
         elif buttonState == False and time.time() > prevTimes[i] + 5:
@@ -105,11 +106,10 @@ while(not exitProgram):
                 exitProgram = True
                 break
             elif i == 2:
-                # printer.print("Exiting calendar printer")
-                # printer.feed(3)
-                # time.sleep(5)
-                # exitProgram = True
-                subprocess.call(["python", "sudoku-gfx.py"])
+                printer.print("Exiting calendar printer")
+                printer.feed(3)
+                time.sleep(5)
+                exitProgram = True
                 break
             
     # Check power sense to see if shutdown is required
