@@ -7,6 +7,7 @@ import RPi.GPIO as GPIO
 from Adafruit_Thermal import *
 import time, socket
 from calendars import Calendars
+import os
 
 ledPin = 18
 buttonPins = [ 24, 23, 22, 25 ]
@@ -20,9 +21,10 @@ printer = Adafruit_Thermal("/dev/ttyAMA0", 19200, timeout=5)
 # Use Broadcom pin numbers (not Raspberry Pi pin numbers) for GPIO
 GPIO.setmode(GPIO.BCM)
 
-# Enable battery power
+# Enable battery power and sense
 GPIO.setup(batteryPowerOnPin, GPIO.OUT)
 GPIO.output(batteryPowerOnPin, GPIO.HIGH)
+GPIO.setup(powerSensePin, GPIO.IN)
 
 # Enable LED and button (w/pull-up on latter)
 GPIO.setup(ledPin, GPIO.OUT)
@@ -36,12 +38,18 @@ GPIO.output(ledPin, GPIO.HIGH)
 # stalling during greeting.
 time.sleep(30)
 
+printer.feed(2)
+printer.boldOn()
+printer.print("Grace & Dad's Calendar Printer")
+printer.boldOff()
+printer.feed(1)
+
 # Show IP address (if network is available)
 try:
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	s.connect(('8.8.8.8', 0))
-#	printer.print('My IP address is ' + s.getsockname()[0])
-#	printer.feed(3)
+	printer.print('My IP address is ' + s.getsockname()[0])
+	printer.feed(3)
 except:
 	printer.boldOn()
 	printer.println('Network is unreachable.')
@@ -59,7 +67,8 @@ for buttonPin in buttonPins:
     prevTimes.append(time.time())
 
 # Main loop
-while(True):
+exitProgram = False
+while(not exitProgram):
 
     t = time.time()
     for i in range(len(buttonPins)):
@@ -85,6 +94,22 @@ while(True):
                     printer.print('My IP address is ' + s.getsockname()[0])
                     printer.feed(3)
 
+        # Check for a button held down for x seconds
+        elif buttonState == False and time.time() > prevTimes[i] + 5:
+            if i == 3:
+                printer.print("Shutting down ...")
+                printer.feed(3)
+                time.sleep(5)
+                os.system("sudo shutdown -h now")
+                exitProgram = True
+                break
+            elif i == 2:
+                printer.print("Exiting calendar printer")
+                printer.feed(3)
+                time.sleep(5)
+                exitProgram = True
+                break
+            
     # Check power sense to see if shutdown is required
     powerSense = GPIO.input(powerSensePin)
     if powerSense == False:
