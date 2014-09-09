@@ -8,6 +8,7 @@ from Adafruit_Thermal import *
 import time, socket
 from calendars import Calendars
 import os
+import subprocess
 
 ledPin = 18
 buttonPins = [ 24, 23, 22, 25 ]
@@ -104,10 +105,11 @@ while(not exitProgram):
                 exitProgram = True
                 break
             elif i == 2:
-                printer.print("Exiting calendar printer")
-                printer.feed(3)
-                time.sleep(5)
-                exitProgram = True
+                # printer.print("Exiting calendar printer")
+                # printer.feed(3)
+                # time.sleep(5)
+                # exitProgram = True
+                subprocess.call(["python", "sudoku-gfx.py"])
                 break
             
     # Check power sense to see if shutdown is required
