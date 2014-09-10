@@ -9,6 +9,7 @@ import time, socket
 from calendars import Calendars
 import os
 import subprocess
+import sudoku
 
 ledPin = 18
 buttonPins = [ 24, 23, 22, 25 ]
@@ -94,7 +95,7 @@ while(not exitProgram):
                 elif i == 3:
                     printer.print('My IP address is ' + s.getsockname()[0])
                     printer.feed(3)
-                    subprocess.call(["python", "sudoku-gfx.py"])
+                    sudoku.print_sudoku(printer)
 
         # Check for a button held down for x seconds
         elif buttonState == False and time.time() > prevTimes[i] + 5:
