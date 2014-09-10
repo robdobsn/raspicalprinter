@@ -20,7 +20,7 @@ def print_sudoku(printer):
     numbers.append(img.crop([384, i*28, 410, (i+1)*28]))
   puzzles = [makepuzzle(solution([None] * 81))]
   for puzzle in puzzles:
-    printboard(puzzle, bg, numbers, xcoord, ycoord)           # Doesn't print, just modifies 'bg' image
+    printboard(puzzle, bg, img, numbers, xcoord, ycoord)           # Doesn't print, just modifies 'bg' image
     printer.printImage(bg, True) # This does the printing
     printer.println("RATING:", ratepuzzle(puzzle, 4))
   printer.feed(3)
@@ -167,7 +167,7 @@ def boardmatches(b1, b2):
     if b1[i] != b2[i]: return False
   return True
 
-def printboard(board, bg, numbers, xcoord, ycoord):
+def printboard(board, bg, img, numbers, xcoord, ycoord):
   bg.paste(img, (0, 0)) # Numbers are cropped off right side
   for row in xrange(9):
     for col in xrange(9):
